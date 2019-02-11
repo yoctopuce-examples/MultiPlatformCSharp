@@ -45,13 +45,15 @@
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 32F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(6, 39);
+            this.label2.Location = new System.Drawing.Point(12, 42);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(138, 51);
+            this.label2.Size = new System.Drawing.Size(414, 51);
             this.label2.TabIndex = 1;
-            this.label2.Text = "label2";
+            this.label2.Text = "1";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // timer1
             // 
@@ -61,7 +63,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(283, 128);
+            this.ClientSize = new System.Drawing.Size(438, 102);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Form1";

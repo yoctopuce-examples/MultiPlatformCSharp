@@ -21,8 +21,6 @@ namespace MultiPlatormApp
                 Application.Run(new Form1());
             else
                 MessageBox.Show("Init error:" + errsmg);
-
-            Application.Run(new Form1());
         }
     }
 }

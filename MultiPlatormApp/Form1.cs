@@ -24,7 +24,6 @@ namespace MultiPlatormApp
             timer1.Interval = 100;
             timer1.Tick += timer1_Tick;
             timer1.Enabled = true;
-
         }
 
         YSensor sensor = null;
@@ -42,7 +41,7 @@ namespace MultiPlatormApp
             if (sensor != null) {
                 if (sensor.isOnline()) {
                     label1.Text = sensor.get_friendlyName();
-                    label2.Text = sensor.get_currentValue() + sensor.get_unit();
+                    label2.Text = sensor.get_currentValue() + " " + sensor.get_unit();
                 } else {
                     label1.Text = "OFFLINE";
                     label2.Text = "Sensor is offline";
