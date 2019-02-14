@@ -248,6 +248,26 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\YoctopuceLib\Sources\dll\libyapi-amd64.so">
+      <Link>libyapi-amd64.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\YoctopuceLib\Sources\dll\libyapi-armhf.so">
+      <Link>libyapi-armhf.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\YoctopuceLib\Sources\dll\libyapi-i386.so">
+      <Link>libyapi-i386.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\YoctopuceLib\Sources\dll\libyapi.dylib">
+      <Link>libyapi.dylib</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\YoctopuceLib\Sources\dll\libyapi32.dylib">
+      <Link>libyapi32.dylib</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
