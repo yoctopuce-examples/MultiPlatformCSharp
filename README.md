@@ -37,6 +37,7 @@ then be run on
 
 ## MultiPlatormApp
 
+
 This simple graphical application use the C# library to display the value of the first Yoctopuce sensors connected by USB. This application can be compiled on Windows with Visual Studio and then be run on
 	* Windows 32 bits
 	* Windows 64 bits
