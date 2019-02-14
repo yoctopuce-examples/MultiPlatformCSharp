@@ -10,16 +10,16 @@ an that can be run on Window, Linux and macOS.
 
 * YoctopuceLib
 
-		[The Yoctopuce C# library](https://github.com/yoctopuce/yoctolib_cs) extracted.
-		Both application will use the files in the *Source* subfolder.
+	[The Yoctopuce C# library](https://github.com/yoctopuce/yoctolib_cs) extracted.
+	Both application will use the files in the *Source* subfolder.
 
 * ConsoleApp1
 
-		A simple console application.
+	A simple console application.
 
 * MultiPlatormApp
 
-		A simple Windows Form application.
+	A simple Windows Form application.
 
 ## ConsoleApp1
 
