@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_currentloopoutput.cs 33708 2018-12-14 14:17:39Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindCurrentLoopOutput(), the high-level API for CurrentLoopOutput functions
  *

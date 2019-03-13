@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_segmenteddisplay.cs 32899 2018-11-02 10:12:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindSegmentedDisplay(), the high-level API for SegmentedDisplay functions
  *

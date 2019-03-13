@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_quadraturedecoder.cs 33708 2018-12-14 14:17:39Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindQuadratureDecoder(), the high-level API for QuadratureDecoder functions
  *

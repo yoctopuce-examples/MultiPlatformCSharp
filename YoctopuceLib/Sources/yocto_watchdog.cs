@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_watchdog.cs 33708 2018-12-14 14:17:39Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindWatchdog(), the high-level API for Watchdog functions
  *

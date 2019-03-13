@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_gps.cs 33708 2018-12-14 14:17:39Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindGps(), the high-level API for Gps functions
  *

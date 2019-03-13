@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_lightsensor.cs 32899 2018-11-02 10:12:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindLightSensor(), the high-level API for LightSensor functions
  *

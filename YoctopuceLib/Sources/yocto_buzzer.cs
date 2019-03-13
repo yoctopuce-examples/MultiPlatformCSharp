@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_buzzer.cs 34289 2019-02-03 21:12:49Z mvuilleu $
+ *  $Id: svn_id $
  *
  *  Implements yFindBuzzer(), the high-level API for Buzzer functions
  *

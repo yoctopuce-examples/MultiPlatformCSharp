@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_powersupply.cs 34115 2019-01-23 14:23:54Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindPowerSupply(), the high-level API for PowerSupply functions
  *

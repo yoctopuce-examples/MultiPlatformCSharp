@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_current.cs 32899 2018-11-02 10:12:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindCurrent(), the high-level API for Current functions
  *

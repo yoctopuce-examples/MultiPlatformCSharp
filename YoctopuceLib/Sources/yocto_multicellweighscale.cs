@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multicellweighscale.cs 33708 2018-12-14 14:17:39Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindMultiCellWeighScale(), the high-level API for MultiCellWeighScale functions
  *

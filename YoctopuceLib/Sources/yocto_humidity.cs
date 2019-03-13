@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_humidity.cs 32899 2018-11-02 10:12:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindHumidity(), the high-level API for Humidity functions
  *

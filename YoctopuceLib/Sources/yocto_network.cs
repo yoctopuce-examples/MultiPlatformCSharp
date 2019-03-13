@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_network.cs 34022 2019-01-15 18:21:34Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindNetwork(), the high-level API for Network functions
  *

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_colorled.cs 33708 2018-12-14 14:17:39Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindColorLed(), the high-level API for ColorLed functions
  *

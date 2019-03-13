@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_oscontrol.cs 32899 2018-11-02 10:12:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindOsControl(), the high-level API for OsControl functions
  *

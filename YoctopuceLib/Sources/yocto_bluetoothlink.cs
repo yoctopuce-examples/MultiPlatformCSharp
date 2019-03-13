@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_bluetoothlink.cs 32899 2018-11-02 10:12:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindBluetoothLink(), the high-level API for BluetoothLink functions
  *

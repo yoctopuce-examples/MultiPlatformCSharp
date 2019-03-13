@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_multiaxiscontroller.cs 32899 2018-11-02 10:12:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindMultiAxisController(), the high-level API for MultiAxisController functions
  *

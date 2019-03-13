@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_voc.cs 32899 2018-11-02 10:12:03Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindVoc(), the high-level API for Voc functions
  *

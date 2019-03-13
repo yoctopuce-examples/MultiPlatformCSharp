@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: yocto_latitude.cs 33708 2018-12-14 14:17:39Z seb $
+ *  $Id: svn_id $
  *
  *  Implements yFindLatitude(), the high-level API for Latitude functions
  *
