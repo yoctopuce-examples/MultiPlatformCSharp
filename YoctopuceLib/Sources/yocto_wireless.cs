@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_wireless.cs 33708 2018-12-14 14:17:39Z seb $
+ * $Id: yocto_wireless.cs 34989 2019-04-05 13:41:16Z seb $
  *
  * Implements yFindWireless(), the high-level API for Wireless functions
  *
@@ -48,7 +48,19 @@ using YDEV_DESCR = System.Int32;
 using YFUN_DESCR = System.Int32;
 
 
+#pragma warning disable 1591
 //--- (generated code: YWlanRecord class start)
+/**
+ * <summary>
+ *   YWlanRecord objects are used to describe a wireless network.
+ * <para>
+ *   These objects are  used in particular in conjunction with the
+ *   YWireless class.
+ * </para>
+ * <para>
+ * </para>
+ * </summary>
+ */
 public class YWlanRecord
 {
 //--- (end of generated code: YWlanRecord class start)
@@ -75,21 +87,61 @@ public class YWlanRecord
   //--- (generated code: YWlanRecord implementation)
 
 
+    /**
+     * <summary>
+     *   Returns the name of the wireless network (SSID).
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the name of the wireless network (SSID).
+     * </returns>
+     */
     public virtual string get_ssid()
     {
         return this._ssid;
     }
 
+    /**
+     * <summary>
+     *   Returns the 802.11 channel.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the 802.11 channel.
+     * </returns>
+     */
     public virtual int get_channel()
     {
         return this._channel;
     }
 
+    /**
+     * <summary>
+     *   Returns the security algorithm used by the wireless network.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the security algorithm.
+     * </returns>
+     */
     public virtual string get_security()
     {
         return this._sec;
     }
 
+    /**
+     * <summary>
+     *   Returns the quality of the wireless network link, in per cents.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the quality of the wireless network link, in per cents.
+     * </returns>
+     */
     public virtual int get_linkQuality()
     {
         return this._rssi;
@@ -740,3 +792,4 @@ public class YWireless : YFunction
 
     //--- (end of generated code: YWireless functions)
 }
+#pragma warning restore 1591

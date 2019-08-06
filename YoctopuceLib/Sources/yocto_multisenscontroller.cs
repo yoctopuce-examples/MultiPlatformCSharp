@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_multisenscontroller.cs 34989 2019-04-05 13:41:16Z seb $
  *
  *  Implements yFindMultiSensController(), the high-level API for MultiSensController functions
  *
@@ -47,6 +47,7 @@ using System.Text;
 using YDEV_DESCR = System.Int32;
 using YFUN_DESCR = System.Int32;
 
+ #pragma warning disable 1591
     //--- (YMultiSensController return codes)
     //--- (end of YMultiSensController return codes)
 //--- (YMultiSensController dlldef)
@@ -56,7 +57,8 @@ using YFUN_DESCR = System.Int32;
 //--- (YMultiSensController class start)
 /**
  * <summary>
- *   The Yoctopuce application programming interface allows you to drive a stepper motor.
+ *   The Yoctopuce application programming interface allows you to setup a customized
+ *   sensor chain.
  * <para>
  * </para>
  * <para>
@@ -149,7 +151,7 @@ public class YMultiSensController : YFunction
      * <para>
      *   Remember to call the
      *   <c>saveToFlash()</c> method of the module if the
-     *   modification must be kept. It's recommended to restart the
+     *   modification must be kept. It is recommended to restart the
      *   device with  <c>module->reboot()</c> after modifying
      *   (and saving) this settings
      * </para>
@@ -238,9 +240,9 @@ public class YMultiSensController : YFunction
 
     /**
      * <summary>
-     *   Changes the device mode to enable maintenance and stop sensors polling.
+     *   Changes the device mode to enable maintenance and to stop sensor polling.
      * <para>
-     *   This way, the device will not restart automatically in case it cannot
+     *   This way, the device does not automatically restart when it cannot
      *   communicate with one of the sensors.
      * </para>
      * <para>
@@ -248,7 +250,7 @@ public class YMultiSensController : YFunction
      * </summary>
      * <param name="newval">
      *   either <c>YMultiSensController.MAINTENANCEMODE_FALSE</c> or <c>YMultiSensController.MAINTENANCEMODE_TRUE</c>,
-     *   according to the device mode to enable maintenance and stop sensors polling
+     *   according to the device mode to enable maintenance and to stop sensor polling
      * </param>
      * <para>
      * </para>
@@ -402,11 +404,11 @@ public class YMultiSensController : YFunction
 
     /**
      * <summary>
-     *   Configure the I2C address of the only sensor connected to the device.
+     *   Configures the I2C address of the only sensor connected to the device.
      * <para>
      *   It is recommended to put the the device in maintenance mode before
-     *   changing Sensors addresses.  This method is only intended to work with a single
-     *   sensor connected to the device, if several sensors are connected, result
+     *   changing sensor addresses.  This method is only intended to work with a single
+     *   sensor connected to the device, if several sensors are connected, the result
      *   is unpredictable.
      *   Note that the device is probably expecting to find a string of sensors with specific
      *   addresses. Check the device documentation to find out which addresses should be used.
@@ -503,3 +505,4 @@ public class YMultiSensController : YFunction
 
     //--- (end of YMultiSensController functions)
 }
+#pragma warning restore 1591

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_current.cs 35360 2019-05-09 09:02:29Z mvuilleu $
  *
  *  Implements yFindCurrent(), the high-level API for Current functions
  *
@@ -47,6 +47,7 @@ using System.Text;
 using YDEV_DESCR = System.Int32;
 using YFUN_DESCR = System.Int32;
 
+ #pragma warning disable 1591
     //--- (YCurrent return codes)
     //--- (end of YCurrent return codes)
 //--- (YCurrent dlldef)
@@ -100,6 +101,22 @@ public class YCurrent : YSensor
         base._parseAttr(json_val);
     }
 
+    /**
+     * <summary>
+     *   Returns the activation state of this input.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   either <c>YCurrent.ENABLED_FALSE</c> or <c>YCurrent.ENABLED_TRUE</c>, according to the activation
+     *   state of this input
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns <c>YCurrent.ENABLED_INVALID</c>.
+     * </para>
+     */
     public int get_enabled()
     {
         int res;
@@ -114,6 +131,30 @@ public class YCurrent : YSensor
         return res;
     }
 
+    /**
+     * <summary>
+     *   Changes the activation state of this input.
+     * <para>
+     *   When an input is disabled,
+     *   its value is no more updated. On some devices, disabling an input can
+     *   improve the refresh rate of the other active inputs.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="newval">
+     *   either <c>YCurrent.ENABLED_FALSE</c> or <c>YCurrent.ENABLED_TRUE</c>, according to the activation
+     *   state of this input
+     * </param>
+     * <para>
+     * </para>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
     public int set_enabled(int newval)
     {
         string rest_val;
@@ -348,3 +389,4 @@ public class YCurrent : YSensor
 
     //--- (end of YCurrent functions)
 }
+#pragma warning restore 1591

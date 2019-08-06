@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_steppermotor.cs 34989 2019-04-05 13:41:16Z seb $
  *
  *  Implements yFindStepperMotor(), the high-level API for StepperMotor functions
  *
@@ -47,6 +47,7 @@ using System.Text;
 using YDEV_DESCR = System.Int32;
 using YFUN_DESCR = System.Int32;
 
+ #pragma warning disable 1591
     //--- (YStepperMotor return codes)
     //--- (end of YStepperMotor return codes)
 //--- (YStepperMotor dlldef)
@@ -1324,3 +1325,4 @@ public class YStepperMotor : YFunction
 
     //--- (end of YStepperMotor functions)
 }
+#pragma warning restore 1591

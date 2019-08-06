@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_messagebox.cs 32899 2018-11-02 10:12:03Z seb $
+ * $Id: yocto_messagebox.cs 34989 2019-04-05 13:41:16Z seb $
  *
  * Implements yFindMessageBox(), the high-level API for MessageBox functions
  *
@@ -49,6 +49,7 @@ using YFUN_DESCR = System.Int32;
 
 
 
+#pragma warning disable 1591
 
     //--- (generated code: YSms return codes)
     //--- (end of generated code: YSms return codes)
@@ -58,6 +59,16 @@ using YFUN_DESCR = System.Int32;
 //--- (generated code: YSms dlldef)
 //--- (end of generated code: YSms dlldef)
 //--- (generated code: YSms class start)
+/**
+ * <summary>
+ *   YSms objects are used to describe a SMS.
+ * <para>
+ *   These objects are used in particular in conjunction with the YMessageBox class.
+ * </para>
+ * <para>
+ * </para>
+ * </summary>
+ */
 public class YSms
 {
 //--- (end of generated code: YSms class start)
@@ -162,6 +173,18 @@ public class YSms
         return this._udata;
     }
 
+    /**
+     * <summary>
+     *   Returns the content of the message.
+     * <para>
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with the content of the message.
+     * </returns>
+     */
     public virtual string get_textData()
     {
         byte[] isolatin;
@@ -389,6 +412,25 @@ public class YSms
         return YAPI.SUCCESS;
     }
 
+    /**
+     * <summary>
+     *   Add a regular text to the SMS.
+     * <para>
+     *   This function support messages
+     *   of more than 160 characters. ISO-latin accented characters
+     *   are supported. For messages with special unicode characters such as asian
+     *   characters and emoticons, use the  <c>addUnicodeData</c> method.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="val">
+     *   the text to be sent in the message
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     */
     public virtual int addText(string val)
     {
         byte[] udata;
@@ -446,6 +488,23 @@ public class YSms
         return this.set_userData(udata);
     }
 
+    /**
+     * <summary>
+     *   Add a unicode text to the SMS.
+     * <para>
+     *   This function support messages
+     *   of more than 160 characters, using SMS concatenation.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="val">
+     *   an array of special unicode characters
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     */
     public virtual int addUnicodeData(List<int> val)
     {
         int arrlen;
@@ -1235,6 +1294,23 @@ public class YSms
         return YAPI.SUCCESS;
     }
 
+    /**
+     * <summary>
+     *   Sends the SMS to the recipient.
+     * <para>
+     *   Messages of more than 160 characters are supported
+     *   using SMS concatenation.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> when the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
     public virtual int send()
     {
         int i;
@@ -2400,3 +2476,4 @@ public class YMessageBox : YFunction
 
     //--- (end of generated code: YMessageBox functions)
 }
+#pragma warning restore 1591

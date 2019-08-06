@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_buzzer.cs 36554 2019-07-29 12:21:31Z mvuilleu $
  *
  *  Implements yFindBuzzer(), the high-level API for Buzzer functions
  *
@@ -47,6 +47,7 @@ using System.Text;
 using YDEV_DESCR = System.Int32;
 using YFUN_DESCR = System.Int32;
 
+ #pragma warning disable 1591
     //--- (YBuzzer return codes)
     //--- (end of YBuzzer return codes)
 //--- (YBuzzer dlldef)
@@ -218,6 +219,8 @@ public class YBuzzer : YFunction
      * <summary>
      *   Changes the volume of the signal sent to the buzzer/speaker.
      * <para>
+     *   Remember to call the
+     *   <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -994,3 +997,4 @@ public class YBuzzer : YFunction
 
     //--- (end of YBuzzer functions)
 }
+#pragma warning restore 1591

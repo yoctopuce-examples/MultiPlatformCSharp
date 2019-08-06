@@ -306,6 +306,10 @@
       <Link>libyapi-armhf.so</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="..\YoctopuceLib\Sources\dll\libyapi-aarch64.so">
+      <Link>libyapi-aarch64.so</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="..\YoctopuceLib\Sources\dll\libyapi-i386.so">
       <Link>libyapi-i386.so</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

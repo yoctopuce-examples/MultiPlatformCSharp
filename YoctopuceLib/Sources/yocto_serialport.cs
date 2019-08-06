@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- * $Id: yocto_serialport.cs 32899 2018-11-02 10:12:03Z seb $
+ * $Id: yocto_serialport.cs 36047 2019-06-28 17:42:49Z mvuilleu $
  *
  * Implements yFindSerialPort(), the high-level API for SerialPort functions
  *
@@ -48,6 +48,7 @@ using YDEV_DESCR = System.Int32;
 using YFUN_DESCR = System.Int32;
 
 
+#pragma warning disable 1591
 //--- (generated code: YSnoopingRecord class start)
 public class YSnoopingRecord
 {
@@ -135,6 +136,7 @@ public class YSerialPort : YFunction
     public const int VOLTAGELEVEL_TTL5VR = 4;
     public const int VOLTAGELEVEL_RS232 = 5;
     public const int VOLTAGELEVEL_RS485 = 6;
+    public const int VOLTAGELEVEL_TTL1V8 = 7;
     public const int VOLTAGELEVEL_INVALID = -1;
     public const string PROTOCOL_INVALID = YAPI.INVALID_STRING;
     public const string SERIALMODE_INVALID = YAPI.INVALID_STRING;
@@ -547,8 +549,9 @@ public class YSerialPort : YFunction
      * <returns>
      *   a value among <c>YSerialPort.VOLTAGELEVEL_OFF</c>, <c>YSerialPort.VOLTAGELEVEL_TTL3V</c>,
      *   <c>YSerialPort.VOLTAGELEVEL_TTL3VR</c>, <c>YSerialPort.VOLTAGELEVEL_TTL5V</c>,
-     *   <c>YSerialPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSerialPort.VOLTAGELEVEL_RS232</c> and
-     *   <c>YSerialPort.VOLTAGELEVEL_RS485</c> corresponding to the voltage level used on the serial line
+     *   <c>YSerialPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSerialPort.VOLTAGELEVEL_RS232</c>,
+     *   <c>YSerialPort.VOLTAGELEVEL_RS485</c> and <c>YSerialPort.VOLTAGELEVEL_TTL1V8</c> corresponding to
+     *   the voltage level used on the serial line
      * </returns>
      * <para>
      *   On failure, throws an exception or returns <c>YSerialPort.VOLTAGELEVEL_INVALID</c>.
@@ -584,8 +587,9 @@ public class YSerialPort : YFunction
      * <param name="newval">
      *   a value among <c>YSerialPort.VOLTAGELEVEL_OFF</c>, <c>YSerialPort.VOLTAGELEVEL_TTL3V</c>,
      *   <c>YSerialPort.VOLTAGELEVEL_TTL3VR</c>, <c>YSerialPort.VOLTAGELEVEL_TTL5V</c>,
-     *   <c>YSerialPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSerialPort.VOLTAGELEVEL_RS232</c> and
-     *   <c>YSerialPort.VOLTAGELEVEL_RS485</c> corresponding to the voltage type used on the serial line
+     *   <c>YSerialPort.VOLTAGELEVEL_TTL5VR</c>, <c>YSerialPort.VOLTAGELEVEL_RS232</c>,
+     *   <c>YSerialPort.VOLTAGELEVEL_RS485</c> and <c>YSerialPort.VOLTAGELEVEL_TTL1V8</c> corresponding to
+     *   the voltage type used on the serial line
      * </param>
      * <para>
      * </para>
@@ -865,6 +869,271 @@ public class YSerialPort : YFunction
     public virtual int sendCommand(string text)
     {
         return this.set_command(text);
+    }
+
+    /**
+     * <summary>
+     *   Reads a single line (or message) from the receive buffer, starting at current stream position.
+     * <para>
+     *   This function is intended to be used when the serial port is configured for a message protocol,
+     *   such as 'Line' mode or frame protocols.
+     * </para>
+     * <para>
+     *   If data at current stream position is not available anymore in the receive buffer,
+     *   the function returns the oldest available line and moves the stream position just after.
+     *   If no new full line is received, the function returns an empty line.
+     * </para>
+     * </summary>
+     * <returns>
+     *   a string with a single line of text
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual string readLine()
+    {
+        string url;
+        byte[] msgbin;
+        List<string> msgarr = new List<string>();
+        int msglen;
+        string res;
+
+        url = "rxmsg.json?pos="+Convert.ToString(this._rxptr)+"&len=1&maxw=1";
+        msgbin = this._download(url);
+        msgarr = this._json_get_array(msgbin);
+        msglen = msgarr.Count;
+        if (msglen == 0) {
+            return "";
+        }
+        // last element of array is the new position
+        msglen = msglen - 1;
+        this._rxptr = YAPI._atoi(msgarr[msglen]);
+        if (msglen == 0) {
+            return "";
+        }
+        res = this._json_get_string(YAPI.DefaultEncoding.GetBytes(msgarr[0]));
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Searches for incoming messages in the serial port receive buffer matching a given pattern,
+     *   starting at current position.
+     * <para>
+     *   This function will only compare and return printable characters
+     *   in the message strings. Binary protocols are handled as hexadecimal strings.
+     * </para>
+     * <para>
+     *   The search returns all messages matching the expression provided as argument in the buffer.
+     *   If no matching message is found, the search waits for one up to the specified maximum timeout
+     *   (in milliseconds).
+     * </para>
+     * </summary>
+     * <param name="pattern">
+     *   a limited regular expression describing the expected message format,
+     *   or an empty string if all messages should be returned (no filtering).
+     *   When using binary protocols, the format applies to the hexadecimal
+     *   representation of the message.
+     * </param>
+     * <param name="maxWait">
+     *   the maximum number of milliseconds to wait for a message if none is found
+     *   in the receive buffer.
+     * </param>
+     * <returns>
+     *   an array of strings containing the messages found, if any.
+     *   Binary messages are converted to hexadecimal representation.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns an empty array.
+     * </para>
+     */
+    public virtual List<string> readMessages(string pattern, int maxWait)
+    {
+        string url;
+        byte[] msgbin;
+        List<string> msgarr = new List<string>();
+        int msglen;
+        List<string> res = new List<string>();
+        int idx;
+
+        url = "rxmsg.json?pos="+Convert.ToString( this._rxptr)+"&maxw="+Convert.ToString( maxWait)+"&pat="+pattern;
+        msgbin = this._download(url);
+        msgarr = this._json_get_array(msgbin);
+        msglen = msgarr.Count;
+        if (msglen == 0) {
+            return res;
+        }
+        // last element of array is the new position
+        msglen = msglen - 1;
+        this._rxptr = YAPI._atoi(msgarr[msglen]);
+        idx = 0;
+        while (idx < msglen) {
+            res.Add(this._json_get_string(YAPI.DefaultEncoding.GetBytes(msgarr[idx])));
+            idx = idx + 1;
+        }
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Changes the current internal stream position to the specified value.
+     * <para>
+     *   This function
+     *   does not affect the device, it only changes the value stored in the API object
+     *   for the next read operations.
+     * </para>
+     * </summary>
+     * <param name="absPos">
+     *   the absolute position index for next read operations.
+     * </param>
+     * <returns>
+     *   nothing.
+     * </returns>
+     */
+    public virtual int read_seek(int absPos)
+    {
+        this._rxptr = absPos;
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Returns the current absolute stream position pointer of the API object.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the absolute position index for next read operations.
+     * </returns>
+     */
+    public virtual int read_tell()
+    {
+        return this._rxptr;
+    }
+
+    /**
+     * <summary>
+     *   Returns the number of bytes available to read in the input buffer starting from the
+     *   current absolute stream position pointer of the API object.
+     * <para>
+     * </para>
+     * </summary>
+     * <returns>
+     *   the number of bytes available to read
+     * </returns>
+     */
+    public virtual int read_avail()
+    {
+        byte[] buff;
+        int bufflen;
+        int res;
+
+        buff = this._download("rxcnt.bin?pos="+Convert.ToString(this._rxptr));
+        bufflen = (buff).Length - 1;
+        while ((bufflen > 0) && (buff[bufflen] != 64)) {
+            bufflen = bufflen - 1;
+        }
+        res = YAPI._atoi((YAPI.DefaultEncoding.GetString(buff)).Substring( 0, bufflen));
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Sends a text line query to the serial port, and reads the reply, if any.
+     * <para>
+     *   This function is intended to be used when the serial port is configured for 'Line' protocol.
+     * </para>
+     * </summary>
+     * <param name="query">
+     *   the line query to send (without CR/LF)
+     * </param>
+     * <param name="maxWait">
+     *   the maximum number of milliseconds to wait for a reply.
+     * </param>
+     * <returns>
+     *   the next text line received after sending the text query, as a string.
+     *   Additional lines can be obtained by calling readLine or readMessages.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns an empty string.
+     * </para>
+     */
+    public virtual string queryLine(string query, int maxWait)
+    {
+        string url;
+        byte[] msgbin;
+        List<string> msgarr = new List<string>();
+        int msglen;
+        string res;
+
+        url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=!"+this._escapeAttr(query);
+        msgbin = this._download(url);
+        msgarr = this._json_get_array(msgbin);
+        msglen = msgarr.Count;
+        if (msglen == 0) {
+            return "";
+        }
+        // last element of array is the new position
+        msglen = msglen - 1;
+        this._rxptr = YAPI._atoi(msgarr[msglen]);
+        if (msglen == 0) {
+            return "";
+        }
+        res = this._json_get_string(YAPI.DefaultEncoding.GetBytes(msgarr[0]));
+        return res;
+    }
+
+    /**
+     * <summary>
+     *   Saves the job definition string (JSON data) into a job file.
+     * <para>
+     *   The job file can be later enabled using <c>selectJob()</c>.
+     * </para>
+     * </summary>
+     * <param name="jobfile">
+     *   name of the job file to save on the device filesystem
+     * </param>
+     * <param name="jsonDef">
+     *   a string containing a JSON definition of the job
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual int uploadJob(string jobfile, string jsonDef)
+    {
+        this._upload(jobfile, YAPI.DefaultEncoding.GetBytes(jsonDef));
+        return YAPI.SUCCESS;
+    }
+
+    /**
+     * <summary>
+     *   Load and start processing the specified job file.
+     * <para>
+     *   The file must have
+     *   been previously created using the user interface or uploaded on the
+     *   device filesystem using the <c>uploadJob()</c> function.
+     * </para>
+     * <para>
+     * </para>
+     * </summary>
+     * <param name="jobfile">
+     *   name of the job file (on the device filesystem)
+     * </param>
+     * <returns>
+     *   <c>YAPI.SUCCESS</c> if the call succeeds.
+     * </returns>
+     * <para>
+     *   On failure, throws an exception or returns a negative error code.
+     * </para>
+     */
+    public virtual int selectJob(string jobfile)
+    {
+        return this.set_currentJob(jobfile);
     }
 
     /**
@@ -1279,7 +1548,7 @@ public class YSerialPort : YFunction
      *   a sequence of bytes with receive buffer contents
      * </returns>
      * <para>
-     *   On failure, throws an exception or returns a negative error code.
+     *   On failure, throws an exception or returns an empty array.
      * </para>
      */
     public virtual List<int> readArray(int nChars)
@@ -1366,271 +1635,6 @@ public class YSerialPort : YFunction
             ofs = ofs + 1;
         }
         return res;
-    }
-
-    /**
-     * <summary>
-     *   Reads a single line (or message) from the receive buffer, starting at current stream position.
-     * <para>
-     *   This function is intended to be used when the serial port is configured for a message protocol,
-     *   such as 'Line' mode or frame protocols.
-     * </para>
-     * <para>
-     *   If data at current stream position is not available anymore in the receive buffer,
-     *   the function returns the oldest available line and moves the stream position just after.
-     *   If no new full line is received, the function returns an empty line.
-     * </para>
-     * </summary>
-     * <returns>
-     *   a string with a single line of text
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns a negative error code.
-     * </para>
-     */
-    public virtual string readLine()
-    {
-        string url;
-        byte[] msgbin;
-        List<string> msgarr = new List<string>();
-        int msglen;
-        string res;
-
-        url = "rxmsg.json?pos="+Convert.ToString(this._rxptr)+"&len=1&maxw=1";
-        msgbin = this._download(url);
-        msgarr = this._json_get_array(msgbin);
-        msglen = msgarr.Count;
-        if (msglen == 0) {
-            return "";
-        }
-        // last element of array is the new position
-        msglen = msglen - 1;
-        this._rxptr = YAPI._atoi(msgarr[msglen]);
-        if (msglen == 0) {
-            return "";
-        }
-        res = this._json_get_string(YAPI.DefaultEncoding.GetBytes(msgarr[0]));
-        return res;
-    }
-
-    /**
-     * <summary>
-     *   Searches for incoming messages in the serial port receive buffer matching a given pattern,
-     *   starting at current position.
-     * <para>
-     *   This function will only compare and return printable characters
-     *   in the message strings. Binary protocols are handled as hexadecimal strings.
-     * </para>
-     * <para>
-     *   The search returns all messages matching the expression provided as argument in the buffer.
-     *   If no matching message is found, the search waits for one up to the specified maximum timeout
-     *   (in milliseconds).
-     * </para>
-     * </summary>
-     * <param name="pattern">
-     *   a limited regular expression describing the expected message format,
-     *   or an empty string if all messages should be returned (no filtering).
-     *   When using binary protocols, the format applies to the hexadecimal
-     *   representation of the message.
-     * </param>
-     * <param name="maxWait">
-     *   the maximum number of milliseconds to wait for a message if none is found
-     *   in the receive buffer.
-     * </param>
-     * <returns>
-     *   an array of strings containing the messages found, if any.
-     *   Binary messages are converted to hexadecimal representation.
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns an empty array.
-     * </para>
-     */
-    public virtual List<string> readMessages(string pattern, int maxWait)
-    {
-        string url;
-        byte[] msgbin;
-        List<string> msgarr = new List<string>();
-        int msglen;
-        List<string> res = new List<string>();
-        int idx;
-
-        url = "rxmsg.json?pos="+Convert.ToString( this._rxptr)+"&maxw="+Convert.ToString( maxWait)+"&pat="+pattern;
-        msgbin = this._download(url);
-        msgarr = this._json_get_array(msgbin);
-        msglen = msgarr.Count;
-        if (msglen == 0) {
-            return res;
-        }
-        // last element of array is the new position
-        msglen = msglen - 1;
-        this._rxptr = YAPI._atoi(msgarr[msglen]);
-        idx = 0;
-        while (idx < msglen) {
-            res.Add(this._json_get_string(YAPI.DefaultEncoding.GetBytes(msgarr[idx])));
-            idx = idx + 1;
-        }
-        return res;
-    }
-
-    /**
-     * <summary>
-     *   Changes the current internal stream position to the specified value.
-     * <para>
-     *   This function
-     *   does not affect the device, it only changes the value stored in the API object
-     *   for the next read operations.
-     * </para>
-     * </summary>
-     * <param name="absPos">
-     *   the absolute position index for next read operations.
-     * </param>
-     * <returns>
-     *   nothing.
-     * </returns>
-     */
-    public virtual int read_seek(int absPos)
-    {
-        this._rxptr = absPos;
-        return YAPI.SUCCESS;
-    }
-
-    /**
-     * <summary>
-     *   Returns the current absolute stream position pointer of the API object.
-     * <para>
-     * </para>
-     * </summary>
-     * <returns>
-     *   the absolute position index for next read operations.
-     * </returns>
-     */
-    public virtual int read_tell()
-    {
-        return this._rxptr;
-    }
-
-    /**
-     * <summary>
-     *   Returns the number of bytes available to read in the input buffer starting from the
-     *   current absolute stream position pointer of the API object.
-     * <para>
-     * </para>
-     * </summary>
-     * <returns>
-     *   the number of bytes available to read
-     * </returns>
-     */
-    public virtual int read_avail()
-    {
-        byte[] buff;
-        int bufflen;
-        int res;
-
-        buff = this._download("rxcnt.bin?pos="+Convert.ToString(this._rxptr));
-        bufflen = (buff).Length - 1;
-        while ((bufflen > 0) && (buff[bufflen] != 64)) {
-            bufflen = bufflen - 1;
-        }
-        res = YAPI._atoi((YAPI.DefaultEncoding.GetString(buff)).Substring( 0, bufflen));
-        return res;
-    }
-
-    /**
-     * <summary>
-     *   Sends a text line query to the serial port, and reads the reply, if any.
-     * <para>
-     *   This function is intended to be used when the serial port is configured for 'Line' protocol.
-     * </para>
-     * </summary>
-     * <param name="query">
-     *   the line query to send (without CR/LF)
-     * </param>
-     * <param name="maxWait">
-     *   the maximum number of milliseconds to wait for a reply.
-     * </param>
-     * <returns>
-     *   the next text line received after sending the text query, as a string.
-     *   Additional lines can be obtained by calling readLine or readMessages.
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns an empty array.
-     * </para>
-     */
-    public virtual string queryLine(string query, int maxWait)
-    {
-        string url;
-        byte[] msgbin;
-        List<string> msgarr = new List<string>();
-        int msglen;
-        string res;
-
-        url = "rxmsg.json?len=1&maxw="+Convert.ToString( maxWait)+"&cmd=!"+query;
-        msgbin = this._download(url);
-        msgarr = this._json_get_array(msgbin);
-        msglen = msgarr.Count;
-        if (msglen == 0) {
-            return "";
-        }
-        // last element of array is the new position
-        msglen = msglen - 1;
-        this._rxptr = YAPI._atoi(msgarr[msglen]);
-        if (msglen == 0) {
-            return "";
-        }
-        res = this._json_get_string(YAPI.DefaultEncoding.GetBytes(msgarr[0]));
-        return res;
-    }
-
-    /**
-     * <summary>
-     *   Saves the job definition string (JSON data) into a job file.
-     * <para>
-     *   The job file can be later enabled using <c>selectJob()</c>.
-     * </para>
-     * </summary>
-     * <param name="jobfile">
-     *   name of the job file to save on the device filesystem
-     * </param>
-     * <param name="jsonDef">
-     *   a string containing a JSON definition of the job
-     * </param>
-     * <returns>
-     *   <c>YAPI.SUCCESS</c> if the call succeeds.
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns a negative error code.
-     * </para>
-     */
-    public virtual int uploadJob(string jobfile, string jsonDef)
-    {
-        this._upload(jobfile, YAPI.DefaultEncoding.GetBytes(jsonDef));
-        return YAPI.SUCCESS;
-    }
-
-    /**
-     * <summary>
-     *   Load and start processing the specified job file.
-     * <para>
-     *   The file must have
-     *   been previously created using the user interface or uploaded on the
-     *   device filesystem using the <c>uploadJob()</c> function.
-     * </para>
-     * <para>
-     * </para>
-     * </summary>
-     * <param name="jobfile">
-     *   name of the job file (on the device filesystem)
-     * </param>
-     * <returns>
-     *   <c>YAPI.SUCCESS</c> if the call succeeds.
-     * </returns>
-     * <para>
-     *   On failure, throws an exception or returns a negative error code.
-     * </para>
-     */
-    public virtual int selectJob(string jobfile)
-    {
-        return this.set_currentJob(jobfile);
     }
 
     /**
@@ -2463,3 +2467,4 @@ public class YSerialPort : YFunction
 
     //--- (end of generated code: YSerialPort functions)
 }
+#pragma warning restore 1591

@@ -1,6 +1,6 @@
 /*********************************************************************
  *
- *  $Id: svn_id $
+ *  $Id: yocto_led.cs 36554 2019-07-29 12:21:31Z mvuilleu $
  *
  *  Implements yFindLed(), the high-level API for Led functions
  *
@@ -47,6 +47,7 @@ using System.Text;
 using YDEV_DESCR = System.Int32;
 using YFUN_DESCR = System.Int32;
 
+ #pragma warning disable 1591
     //--- (YLed return codes)
     //--- (end of YLed return codes)
 //--- (YLed dlldef)
@@ -207,6 +208,8 @@ public class YLed : YFunction
      * <summary>
      *   Changes the current LED intensity (in per cent).
      * <para>
+     *   Remember to call the
+     *   <c>saveToFlash()</c> method of the module if the modification must be kept.
      * </para>
      * <para>
      * </para>
@@ -478,3 +481,4 @@ public class YLed : YFunction
 
     //--- (end of YLed functions)
 }
+#pragma warning restore 1591
